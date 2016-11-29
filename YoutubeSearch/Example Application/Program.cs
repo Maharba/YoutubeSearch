@@ -23,9 +23,16 @@ namespace Example_Application
 
             var items = new VideoSearch();
 
+            GetVideos(querystring, querypages, items); 
+            
+            Console.ReadLine();
+        }
+
+        private static async void GetVideos(string querystring, int querypages, VideoSearch items)
+        {
             int i = 1;
 
-            foreach (var item in items.SearchQuery(querystring, querypages))
+            foreach (var item in await items.SearchQuery(querystring, querypages))
             {
                 Console.WriteLine(i + "###########################");
                 Console.WriteLine("Title: " + item.Title);
@@ -38,8 +45,6 @@ namespace Example_Application
 
                 i++;
             }
-
-            Console.ReadLine();
         }
     }
 }

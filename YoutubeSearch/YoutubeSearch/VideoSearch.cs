@@ -16,9 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see<http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace YoutubeSearch
 {
@@ -26,7 +29,7 @@ namespace YoutubeSearch
     {
         List<VideoInformation> items;
 
-        WebClient webclient;
+        HttpClient httpclient;
 
         string title;
         string author;
@@ -41,17 +44,17 @@ namespace YoutubeSearch
         /// <param name="querystring"></param>
         /// <param name="querypages"></param>
         /// <returns></returns>
-        public List<VideoInformation> SearchQuery(string querystring, int querypages)
+        public async Task<List<VideoInformation>> SearchQuery(string querystring, int querypages)
         {
             items = new List<VideoInformation>();
 
-            webclient = new WebClient();
+            httpclient = new HttpClient();
 
             // Do search
             for (int i = 1; i <= querypages; i++)
             {
                 // Search address
-                string html = webclient.DownloadString("https://www.youtube.com/results?search_query=" + querystring + "&page=" + i);
+                var html =  await httpclient.GetStringAsync("https://www.youtube.com/results?search_query=" + querystring + "&page=" + i);
 
                 // Search string
                 string pattern = "<div class=\"yt-lockup-content\">.*?title=\"(?<NAME>.*?)\".*?</div></div></div></li>";
